@@ -215,7 +215,8 @@ task.spawn(function()
 			for _,v in pairs(player.PlayerGui:GetDescendants()) do
 
 				-- cari semua tombol GUI
-				if v:IsA("ImageButton") or v:IsA("TextButton") then
+				if (v:IsA("ImageButton") or v:IsA("TextButton"))
+				and not v:IsDescendantOf(gui) then
 
 					-- hanya tombol yang terlihat
 					if v.Visible and v.AbsoluteSize.X > 40 and v.AbsoluteSize.Y > 40 then
