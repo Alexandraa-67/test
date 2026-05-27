@@ -217,6 +217,11 @@ task.spawn(function()
 				-- cari semua tombol GUI
 				if v:IsA("ImageButton") or v:IsA("TextButton") then
 
+					-- blacklist UI script sendiri
+					if v:IsDescendantOf(gui) then
+						continue
+					end
+
 					-- hanya tombol yang terlihat
 					if v.Visible and v.AbsoluteSize.X > 40 and v.AbsoluteSize.Y > 40 then
 
@@ -235,12 +240,7 @@ task.spawn(function()
 						or string.find(name,"space")
 						or string.find(name,"action") then
 
-						if success
-						and button
-						and button.Visible
-						and not button:IsDescendantOf(gui) then
-						
-								pcall(function()
+							pcall(function()
 								v:Activate()
 							end)
 
