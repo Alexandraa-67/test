@@ -143,7 +143,68 @@ afkButton.MouseButton1Click:Connect(function()
 
 end)
 
--- AUTO QTE
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local AutoQTE = false
+
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "UniversalQTE"
+gui.ResetOnSpawn = false
+gui.Parent = player.PlayerGui
+
+local main = Instance.new("Frame")
+main.Parent = gui
+main.Size = UDim2.new(0,220,0,90)
+main.Position = UDim2.new(0.03,0,0.2,0)
+main.BackgroundColor3 = Color3.fromRGB(20,20,20)
+main.BorderSizePixel = 0
+main.Active = true
+main.Draggable = true
+
+Instance.new("UICorner",main).CornerRadius = UDim.new(0,16)
+
+local stroke = Instance.new("UIStroke")
+stroke.Parent = main
+stroke.Color = Color3.fromRGB(80,255,80)
+
+local title = Instance.new("TextLabel")
+title.Parent = main
+title.BackgroundTransparency = 1
+title.Size = UDim2.new(1,0,0,35)
+title.Text = "⚡ Universal Auto QTE"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 19
+title.TextColor3 = Color3.new(1,1,1)
+
+local toggle = Instance.new("TextButton")
+toggle.Parent = main
+toggle.Size = UDim2.new(0,90,0,38)
+toggle.Position = UDim2.new(0.5,-45,0.55,0)
+toggle.BackgroundColor3 = Color3.fromRGB(70,70,70)
+toggle.Text = "OFF"
+toggle.Font = Enum.Font.GothamBold
+toggle.TextSize = 18
+toggle.TextColor3 = Color3.new(1,1,1)
+toggle.BorderSizePixel = 0
+
+Instance.new("UICorner",toggle).CornerRadius = UDim.new(1,0)
+
+toggle.MouseButton1Click:Connect(function()
+
+	AutoQTE = not AutoQTE
+
+	if AutoQTE then
+		toggle.Text = "ON"
+		toggle.BackgroundColor3 = Color3.fromRGB(0,200,0)
+	else
+		toggle.Text = "OFF"
+		toggle.BackgroundColor3 = Color3.fromRGB(70,70,70)
+	end
+end)
+
+-- UNIVERSAL AUTO QTE
 task.spawn(function()
 
 	while true do
@@ -153,37 +214,33 @@ task.spawn(function()
 
 			for _,v in pairs(player.PlayerGui:GetDescendants()) do
 
+				-- cari semua tombol GUI
 				if v:IsA("ImageButton") or v:IsA("TextButton") then
 
-					if v.Visible
-					and v.AbsoluteSize.X > 25
-					and v.AbsoluteSize.Y > 25
-					and v.AbsoluteSize.X < 350
-					and v.AbsoluteSize.Y < 350 then
+					-- hanya tombol yang terlihat
+					if v.Visible and v.AbsoluteSize.X > 40 and v.AbsoluteSize.Y > 40 then
 
-						-- blacklist UI sendiri
-						if v:IsDescendantOf(gui) then
-							continue
-						end
-
+						-- nama umum QTE
 						local name = string.lower(v.Name)
 
-						-- universal qte detect
 						if string.find(name,"qte")
 						or string.find(name,"tap")
 						or string.find(name,"skill")
 						or string.find(name,"hit")
 						or string.find(name,"click")
 						or string.find(name,"press")
+						or string.find(name,"button")
 						or string.find(name,"prompt")
 						or string.find(name,"key")
 						or string.find(name,"space")
-						or string.find(name,"action")
-						or string.find(name,"target")
-						or string.find(name,"timing")
-						or string.find(name,"note") then
+						or string.find(name,"action") then
 
-							pcall(function()
+						if success
+						and button
+						and button.Visible
+						and not button:IsDescendantOf(gui) then
+						
+								pcall(function()
 								v:Activate()
 							end)
 
@@ -201,7 +258,8 @@ task.spawn(function()
 		end
 	end
 end)
--- ANTI AFK
+
+	-- ANTI AFK
 player.Idled:Connect(function()
 
 	if AntiAFK then
