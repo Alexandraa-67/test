@@ -54,7 +54,7 @@ title.BackgroundTransparency = 1
 title.Position = UDim2.new(0,21,0,8)
 title.Size = UDim2.new(1,-45,0,24)
 title.Font = Enum.Font.GothamBold
-title.Text = "Alexandra Interface (AI)"
+title.Text = "Universal QTE"
 title.TextColor3 = Color3.new(1,1,1)
 title.TextSize = 14
 title.TextXAlignment = Enum.TextXAlignment.Center
@@ -151,29 +151,43 @@ task.spawn(function()
 
 		if AutoQTE then
 
-			local success,button = pcall(function()
+			for _,v in pairs(player.PlayerGui:GetDescendants()) do
 
-				return player.PlayerGui
-					.TreadmillQTE_Icon
-					.Frame
-					.ImageButton
+				-- cari semua tombol GUI
+				if v:IsA("ImageButton") or v:IsA("TextButton") then
 
-			end)
+					-- hanya tombol yang terlihat
+					if v.Visible and v.AbsoluteSize.X > 40 and v.AbsoluteSize.Y > 40 then
 
-			if success and button and button.Visible then
+						-- nama umum QTE
+						local name = string.lower(v.Name)
 
-				pcall(function()
-					button:Activate()
-				end)
+						if string.find(name,"qte")
+						or string.find(name,"tap")
+						or string.find(name,"skill")
+						or string.find(name,"hit")
+						or string.find(name,"click")
+						or string.find(name,"press")
+						or string.find(name,"button")
+						or string.find(name,"prompt")
+						or string.find(name,"key")
+						or string.find(name,"space")
+						or string.find(name,"action") then
 
-				pcall(function()
-					firesignal(button.Activated)
-				end)
+							pcall(function()
+								v:Activate()
+							end)
 
-				pcall(function()
-					firesignal(button.MouseButton1Click)
-				end)
+							pcall(function()
+								firesignal(v.Activated)
+							end)
 
+							pcall(function()
+								firesignal(v.MouseButton1Click)
+							end)
+						end
+					end
+				end
 			end
 		end
 	end
