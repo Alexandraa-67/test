@@ -151,66 +151,49 @@ task.spawn(function()
 
 		if AutoQTE then
 
-			local viewport = workspace.CurrentCamera.ViewportSize
-
 			for _,v in pairs(player.PlayerGui:GetDescendants()) do
 
 				if v:IsA("ImageButton") or v:IsA("TextButton") then
 
 					if v.Visible
-					and v.AbsoluteSize.X > 40
-					and v.AbsoluteSize.Y > 40
-					and v.AbsoluteSize.X < 300
-					and v.AbsoluteSize.Y < 300 then
+					and v.AbsoluteSize.X > 25
+					and v.AbsoluteSize.Y > 25
+					and v.AbsoluteSize.X < 350
+					and v.AbsoluteSize.Y < 350 then
 
-						local pos = v.AbsolutePosition
-						local size = v.AbsoluteSize
+						-- blacklist UI sendiri
+						if v:IsDescendantOf(gui) then
+							continue
+						end
 
-						local centerX = pos.X + size.X/2
-						local centerY = pos.Y + size.Y/2
+						local name = string.lower(v.Name)
 
-						-- hanya area tengah layar
-						local inMiddle =
-							centerX > viewport.X * 0.2 and
-							centerX < viewport.X * 0.8 and
-							centerY > viewport.Y * 0.15 and
-							centerY < viewport.Y * 0.85
+						-- universal qte detect
+						if string.find(name,"qte")
+						or string.find(name,"tap")
+						or string.find(name,"skill")
+						or string.find(name,"hit")
+						or string.find(name,"click")
+						or string.find(name,"press")
+						or string.find(name,"prompt")
+						or string.find(name,"key")
+						or string.find(name,"space")
+						or string.find(name,"action")
+						or string.find(name,"target")
+						or string.find(name,"timing")
+						or string.find(name,"note") then
 
-						if inMiddle then
+							pcall(function()
+								v:Activate()
+							end)
 
-							local name = string.lower(v.Name)
+							pcall(function()
+								firesignal(v.Activated)
+							end)
 
-							-- filter universal QTE
-							if string.find(name,"qte")
-							or string.find(name,"tap")
-							or string.find(name,"skill")
-							or string.find(name,"hit")
-							or string.find(name,"click")
-							or string.find(name,"press")
-							or string.find(name,"prompt")
-							or string.find(name,"key")
-							or string.find(name,"space")
-							or string.find(name,"action") then
-
-								-- blacklist UI script sendiri
-								if v ~= qteButton
-								and v ~= afkButton
-								and v ~= hideButton
-								and v ~= openButton then
-
-									pcall(function()
-										v:Activate()
-									end)
-
-									pcall(function()
-										firesignal(v.Activated)
-									end)
-
-									pcall(function()
-										firesignal(v.MouseButton1Click)
-									end)
-								end
-							end
+							pcall(function()
+								firesignal(v.MouseButton1Click)
+							end)
 						end
 					end
 				end
@@ -218,7 +201,6 @@ task.spawn(function()
 		end
 	end
 end)
-
 -- ANTI AFK
 player.Idled:Connect(function()
 
