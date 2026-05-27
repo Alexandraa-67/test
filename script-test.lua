@@ -217,41 +217,35 @@ task.spawn(function()
 				-- cari semua tombol GUI
 				if v:IsA("ImageButton") or v:IsA("TextButton") then
 
-					-- jangan klik UI script sendiri
-					if not v:IsDescendantOf(gui) then
+					-- hanya tombol yang terlihat
+					if v.Visible and v.AbsoluteSize.X > 40 and v.AbsoluteSize.Y > 40 then
 
-						-- hanya tombol yang terlihat
-						if v.Visible
-						and v.AbsoluteSize.X > 40
-						and v.AbsoluteSize.Y > 40 then
+						-- nama umum QTE
+						local name = string.lower(v.Name)
 
-							-- nama umum QTE
-							local name = string.lower(v.Name)
+						if string.find(name,"qte")
+						or string.find(name,"tap")
+						or string.find(name,"skill")
+						or string.find(name,"hit")
+						or string.find(name,"click")
+						or string.find(name,"press")
+						or string.find(name,"button")
+						or string.find(name,"prompt")
+						or string.find(name,"key")
+						or string.find(name,"space")
+						or string.find(name,"action") then
 
-							if string.find(name,"qte")
-							or string.find(name,"tap")
-							or string.find(name,"skill")
-							or string.find(name,"hit")
-							or string.find(name,"click")
-							or string.find(name,"press")
-							or string.find(name,"button")
-							or string.find(name,"prompt")
-							or string.find(name,"key")
-							or string.find(name,"space")
-							or string.find(name,"action") then
+							pcall(function()
+								v:Activate()
+							end)
 
-								pcall(function()
-									v:Activate()
-								end)
+							pcall(function()
+								firesignal(v.Activated)
+							end)
 
-								pcall(function()
-									firesignal(v.Activated)
-								end)
-
-								pcall(function()
-									firesignal(v.MouseButton1Click)
-								end)
-							end
+							pcall(function()
+								firesignal(v.MouseButton1Click)
+							end)
 						end
 					end
 				end
