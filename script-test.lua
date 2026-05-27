@@ -143,7 +143,81 @@ afkButton.MouseButton1Click:Connect(function()
 
 end)
 
+-- AUTO QTE
+task.spawn(function()
 
+	while true do
+		task.wait(0.01)
+
+		if AutoQTE then
+
+			local viewport = workspace.CurrentCamera.ViewportSize
+
+			for _,v in pairs(player.PlayerGui:GetDescendants()) do
+
+				if v:IsA("ImageButton") or v:IsA("TextButton") then
+
+					if v.Visible
+					and v.AbsoluteSize.X > 40
+					and v.AbsoluteSize.Y > 40
+					and v.AbsoluteSize.X < 300
+					and v.AbsoluteSize.Y < 300 then
+
+						local pos = v.AbsolutePosition
+						local size = v.AbsoluteSize
+
+						local centerX = pos.X + size.X/2
+						local centerY = pos.Y + size.Y/2
+
+						-- hanya area tengah layar
+						local inMiddle =
+							centerX > viewport.X * 0.2 and
+							centerX < viewport.X * 0.8 and
+							centerY > viewport.Y * 0.15 and
+							centerY < viewport.Y * 0.85
+
+						if inMiddle then
+
+							local name = string.lower(v.Name)
+
+							-- filter universal QTE
+							if string.find(name,"qte")
+							or string.find(name,"tap")
+							or string.find(name,"skill")
+							or string.find(name,"hit")
+							or string.find(name,"click")
+							or string.find(name,"press")
+							or string.find(name,"prompt")
+							or string.find(name,"key")
+							or string.find(name,"space")
+							or string.find(name,"action") then
+
+								-- blacklist UI script sendiri
+								if v ~= qteButton
+								and v ~= afkButton
+								and v ~= hideButton
+								and v ~= openButton then
+
+									pcall(function()
+										v:Activate()
+									end)
+
+									pcall(function()
+										firesignal(v.Activated)
+									end)
+
+									pcall(function()
+										firesignal(v.MouseButton1Click)
+									end)
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end)
 
 -- ANTI AFK
 player.Idled:Connect(function()
