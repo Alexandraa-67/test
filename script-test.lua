@@ -144,7 +144,6 @@ afkButton.MouseButton1Click:Connect(function()
 end)
 
 -- AUTO QTE
--- AUTO QTE
 task.spawn(function()
 
 	while true do
